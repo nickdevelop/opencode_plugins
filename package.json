@@ -1,0 +1,29 @@
+{
+  "name": "opencode-todowrite",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "OpenCode V2 plugin: session-scoped todo list tool + sidebar, ported from V1 todowrite",
+  "exports": {
+    ".": "./index.ts",
+    "./tui": "./tui.tsx",
+    "./rpc": "./rpc.ts"
+  },
+  "files": [
+    "index.ts",
+    "rpc.ts",
+    "tui.tsx",
+    "README.md"
+  ],
+  "dependencies": {
+    "@opencode/plugin": "2.0.22",
+    "@opentui/core": "0.5.14",
+    "@opentui/solid": "0.5.14",
+    "solid-js": "1.9.12"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
