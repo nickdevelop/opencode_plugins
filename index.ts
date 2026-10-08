@@ -13,15 +13,44 @@ const DESCRIPTION = [
   "Create and maintain a structured task list for the current coding session.",
   "Tracks progress, organizes multi-step work, and surfaces status to the user.",
   "",
-  "When to use: task needs 3+ distinct steps; non-trivial work; user gave multiple tasks;",
-  "new instructions arrive; starting a task (mark exactly ONE in_progress); finishing a task",
-  "(mark completed only after real verification, add follow-ups discovered during work).",
+  "## When to use",
+  "Use proactively when:",
+  "- The task requires 3+ distinct steps or actions (not just 3 tool calls for a single conceptual step)",
+  "- The work is non-trivial and benefits from planning",
+  "- The user provides multiple tasks (numbered or comma-separated) or explicitly asks for a todo list",
+  "- New instructions arrive - capture them as todos",
+  "- You start a task - mark it `in_progress` (only one at a time) before working",
+  "- You finish a task - mark it `completed` and add any follow-ups discovered during the work",
   "",
-  "Skip when: single straightforward task, purely informational request, tracking adds no value.",
+  "## When NOT to use",
+  "Skip when:",
+  "- The work is a single, straightforward task (or <3 trivial steps)",
+  "- The request is purely informational or conversational",
+  "- Tracking adds no organizational value",
   "",
-  "States: pending, in_progress (exactly ONE at a time), completed, cancelled.",
-  "Rules: update in real time, don't batch; keep one in_progress; if blocked, keep",
-  "in_progress and add a follow-up describing the blocker; preserve user commands verbatim.",
+  "## States",
+  "- `pending` - not started",
+  "- `in_progress` - actively working (exactly ONE at a time)",
+  "- `completed` - finished successfully",
+  "- `cancelled` - no longer needed",
+  "",
+  "## Rules",
+  "- Update status in real time; don't batch completions",
+  "- Mark `completed` only after the required work is actually done, including any required verification. Never based on intent.",
+  "- Keep exactly one `in_progress` while work remains",
+  "- If blocked or partial, keep it `in_progress` and add a follow-up todo describing the blocker",
+  "- Preserve user-provided commands verbatim (flags, args, order)",
+  "- Items should be specific and actionable; break large work into smaller steps",
+  "",
+  "When in doubt, use it.",
+].join("\n")
+
+const TASK_MANAGEMENT = [
+  "# Task Management",
+  "You have access to the todowrite tool to help you manage and plan tasks. Use it VERY frequently to ensure that you are tracking your tasks and giving the user visibility into your progress.",
+  "It is also EXTREMELY helpful for planning tasks, and for breaking down larger complex tasks into smaller steps. If you do not use this tool when planning, you may forget to do important tasks - and that is unacceptable.",
+  "",
+  "It is critical that you mark todos as completed as soon as you are done with a task. Do not batch up multiple tasks before marking them as completed.",
 ].join("\n")
 
 const key = (sessionID: string) => `todo:${sessionID}`
@@ -56,6 +85,11 @@ export default Plugin.define({
         return { todos: await saveTodos(sessionID, todos ?? []) }
       },
     })
+
+    await ctx.session.hook("context", (event) => {
+      event.system.push({ type: "text", text: TASK_MANAGEMENT })
+    })
+
     await ctx.tool.transform((editor) => {
       editor.add({
         name: "todowrite",
