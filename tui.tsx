@@ -77,7 +77,7 @@ interface TodoItem {
 const MARK: Record<TodoItem["status"], string> = {
   pending: "[ ]",
   in_progress: "[~]",
-  completed: "[x]",
+  completed: "[✓]",
   cancelled: "[-]",
 }
 
@@ -107,11 +107,11 @@ function TodoPanel(props: { sessionID: string }) {
   })
   onCleanup(off)
 
-  const open = () => todos().filter((t) => t.status !== "completed").length
+  const done = () => todos().filter((t) => t.status === "completed").length
 
   return (
     <box flexDirection="column">
-      <text>{`Todos (${open()}/${todos().length})`}</text>
+      <text>{`Todos (${done()}/${todos().length})`}</text>
       <Show when={todos().length === 0}>
         <text dim>No todos yet.</text>
       </Show>

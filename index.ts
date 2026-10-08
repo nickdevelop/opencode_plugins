@@ -87,9 +87,10 @@ export default Plugin.define({
         execute: async (input, context) => {
           const todos = (input as { todos: TodoItem[] }).todos ?? []
           await saveTodos(context.sessionID, todos)
-          const open = todos.filter((t) => t.status !== "completed").length
+          const done = todos.filter((t) => t.status === "completed").length
           return {
-            content: `${open} todos\n` + JSON.stringify(todos, null, 2),
+            content:
+              `Completed ${done}/${todos.length} todos\n` + JSON.stringify(todos, null, 2),
             metadata: { todos },
           }
         },

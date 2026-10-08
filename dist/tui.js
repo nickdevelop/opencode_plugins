@@ -97,7 +97,7 @@ const TodoRpc = {
 const MARK = {
   pending: "[ ]",
   in_progress: "[~]",
-  completed: "[x]",
+  completed: "[✓]",
   cancelled: "[-]"
 };
 function TodoPanel(props) {
@@ -122,13 +122,13 @@ function TodoPanel(props) {
     if (data.sessionID === props.sessionID) void refresh();
   });
   onCleanup(off);
-  const open = () => todos().filter(t => t.status !== "completed").length;
+  const done = () => todos().filter(t => t.status === "completed").length;
   return (() => {
     var _el$ = _$createElement("box"),
       _el$2 = _$createElement("text");
     _$insertNode(_el$, _el$2);
     _$setProp(_el$, "flexDirection", "column");
-    _$insert(_el$2, () => `Todos (${open()}/${todos().length})`);
+    _$insert(_el$2, () => `Todos (${done()}/${todos().length})`);
     _$insert(_el$, _$createComponent(Show, {
       get when() {
         return todos().length === 0;
