@@ -7,16 +7,18 @@ OpenCode **V2** plugin: a session-scoped todo list, ported from V1's built-in
 
 ```
 .
-├── index.ts    # server plugin: todowrite / todoread tools + /todo-list command
-├── rpc.ts      # server RPC definition (list / save + updated event)
-├── tui.tsx     # CLI plugin: sidebar panel + /todo-add /todo-done /todo-clear
+├── index.ts        # server plugin: todowrite / todoread tools + /todo-list command
+├── rpc.ts          # server RPC definition (list / save + updated event)
+├── tui.tsx         # CLI plugin source: sidebar panel + /todo-add /todo-done /todo-clear
+├── dist/tui.js     # precompiled TUI entry (published; do not edit by hand)
+├── build-tui.mjs   # compiles tui.tsx -> dist/tui.js (babel-preset-solid)
 └── package.json
 ```
 
 The package exports:
 
 - `.` → `index.ts` (server plugin)
-- `./tui` → `tui.tsx` (CLI/TUI plugin)
+- `./tui` → `dist/tui.js` (precompiled CLI/TUI plugin)
 - `./rpc` → `rpc.ts` (RPC descriptor)
 
 ## Install (as a local plugin)
@@ -24,7 +26,7 @@ The package exports:
 Install dependencies:
 
 ```sh
-cd /root/aispace/opencode_plugins
+cd /data/projects/opencode_plugins
 npm install
 ```
 
@@ -57,6 +59,16 @@ conversation.
 
 ## Notes
 
+- **TUI entry must stay precompiled.** OpenCode v2 only runs
+  `babel-preset-solid` on `.tsx`/`.jsx` paths that are *not* under
+  `node_modules`. Package-installed plugins (`github:` / `npm:`) live under
+  `node_modules`, so shipping `tui.tsx` as the `./tui` entry makes the host fall
+  back to Bun's default React JSX transpiler and fail with
+  `Cannot find package 'react'`. `./tui` therefore points at the committed
+  `dist/tui.js`. After editing `tui.tsx`, run `npm run build` (also wired to
+  `prepare`, so git installs rebuild automatically) and commit `dist/tui.js`.
+  Do **not** add a `react` dependency — a React runtime cannot drive OpenTUI's
+  Solid reconciler and would only hide the error.
 - `tui.tsx` mirrors the RPC descriptor inline instead of importing `./rpc.ts`.
   The TUI loader only remaps `@opencode/plugin/tui`, not `@opencode/plugin/rpc`,
   so a relative import would fail at read stage. Keep the two definitions in
