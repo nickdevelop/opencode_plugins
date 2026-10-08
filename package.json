@@ -23,7 +23,7 @@
     "solid-js": "1.9.12"
   },
   "scripts": {
-    "build": "node build-tui.mjs",
+    "build:tui": "node build-tui.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
