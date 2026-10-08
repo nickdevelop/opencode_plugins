@@ -24,13 +24,12 @@
   },
   "scripts": {
     "build": "node build-tui.mjs",
-    "prepare": "node build-tui.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/preset-typescript": "^7.27.1",
-    "babel-preset-solid": "^1.9.12",
-    "typescript": "^5.0.0"
+    "@babel/core": "7.28.0",
+    "@babel/preset-typescript": "7.27.1",
+    "babel-preset-solid": "1.9.12",
+    "typescript": "5.9.3"
   }
 }
